@@ -86,7 +86,7 @@ export default function LibraryPage() {
                       <button onClick={() => update(p.id, { favorite: !p.favorite })} className={clsx('grid size-7 place-items-center rounded-full', p.favorite ? 'text-amber-500' : 'text-ink-300 hover:text-ink-600')} aria-label={p.favorite ? 'Unstar' : 'Star'}><Star className={clsx('size-4', p.favorite && 'fill-current')} /></button>
                     </div>
                   </div>
-                  <p className="line-clamp-[9] whitespace-pre-wrap px-4 py-3 text-[13.5px] leading-relaxed text-ink-800"><RichText text={p.thread?.join('\n\n') ?? p.text} /></p>
+                  <div className="relative mx-4 my-3 max-h-56 overflow-hidden"><p className="whitespace-pre-wrap text-[13.5px] leading-relaxed text-ink-800"><RichText text={p.thread?.join('\n\n') ?? p.text} /></p><div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white" /></div>
                   {p.scheduledAt && <div className="mx-4 mb-3 flex items-center gap-1.5 rounded-lg bg-sea-50 px-2.5 py-1.5 text-[12px] font-medium text-sea-700"><CalendarClock className="size-3.5" />{fmt(p.scheduledAt)}</div>}
                   <div className="flex items-center gap-1 border-t border-ink-100 px-2 py-1.5">
                     <button onClick={() => navigator.clipboard.writeText(p.thread?.join('\n\n') ?? p.text).then(() => toast.success('Copied'))} className="flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-semibold text-ink-600 hover:bg-ink-100"><Copy className="size-3.5" />Copy</button>

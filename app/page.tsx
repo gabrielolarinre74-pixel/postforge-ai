@@ -33,6 +33,7 @@ export default function Studio() {
   const [variants, setVariants] = useState<Variant[]>([]);
   const [tab, setTab] = useState<PlatformId | 'all'>('all');
   const [seed, setSeed] = useState(0);
+  const [generation, setGeneration] = useState(0);
   const [busy, setBusy] = useState(false);
   const [savedIds, setSavedIds] = useState<Record<string, string>>({});
   const [scheduling, setScheduling] = useState<Variant | null>(null);
@@ -59,6 +60,8 @@ export default function Studio() {
       out = composeOffline(clean, voice, nextSeed);
     }
     setVariants(out);
+    setGeneration((g) => g + 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setSavedIds({});
     if (tab !== 'all' && !clean.platforms.includes(tab)) setTab('all');
     setBusy(false);
@@ -167,7 +170,7 @@ export default function Studio() {
         <section className="min-w-0">
           {variants.length === 0 ? (
             <div className="panel dots relative flex min-h-[640px] flex-col items-center justify-center overflow-hidden p-10 text-center">
-              <div className="flex -space-x-2">{PLATFORM_IDS.map((p) => <span key={p} className="rounded-lg ring-4 ring-white"><PlatformBadge id={p} /></span>)}</div>
+              <div className="flex gap-2">{PLATFORM_IDS.map((p, i) => <span key={p} className="grid size-12 place-items-center rounded-2xl bg-white shadow-lift" style={{ transform: `translateY(${i % 2 ? 6 : -2}px) rotate(${(i - 1.5) * 4}deg)` }}><PlatformBadge id={p} /></span>)}</div>
               <h2 className="mt-5 text-[22px] font-semibold tracking-tight">Your drafts land here</h2>
               <p className="mt-1.5 max-w-sm text-[14px] leading-relaxed text-ink-500">Each platform gets three structures: a punchy line, a list and a longer take. Every draft is counted, tagged and run through the linter.</p>
               <div className="mt-6 grid w-full max-w-lg gap-2 text-left sm:grid-cols-3">
@@ -179,7 +182,7 @@ export default function Studio() {
           ) : (
             <>
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap gap-1 rounded-full bg-white p-1 shadow-card">
+                <div className="flex flex-wrap gap-1 rounded-full bg-white p-1 shadow-card" role="group" aria-label="Filter results">
                   {(['all', ...PLATFORM_IDS.filter((p) => counts[p])] as const).map((p) => (
                     <button key={p} onClick={() => setTab(p)} className={clsx('flex h-8 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition', tab === p ? 'bg-ink-950 text-white' : 'text-ink-500 hover:text-ink-950')}>
                       {p === 'all' ? 'All' : PLATFORMS[p].name}<span className={clsx('text-[11px]', tab === p ? 'text-white/60' : 'text-ink-400')}>{p === 'all' ? variants.length : counts[p]}</span>
@@ -190,7 +193,7 @@ export default function Studio() {
               </div>
               <div className={clsx('grid gap-4', tab === 'all' ? 'xl:grid-cols-2' : 'mx-auto max-w-2xl')}>
                 {shown.map((v, i) => (
-                  <VariantCard key={v.id} variant={v} voice={voice} saved={!!savedIds[v.id]} defaultOpen={tab !== 'all' && i === 0} onSave={(x) => save(x)} onSchedule={(x) => setScheduling(x)} />
+                  <VariantCard key={`${generation}-${v.id}`} variant={v} voice={voice} saved={!!savedIds[v.id]} defaultOpen={tab !== 'all' && i === 0} onSave={(x) => save(x)} onSchedule={(x) => setScheduling(x)} />
                 ))}
               </div>
             </>
