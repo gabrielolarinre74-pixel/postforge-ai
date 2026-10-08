@@ -7,8 +7,9 @@ const STOP = new Set(
     'still even much many like want need way ways thing things people time year years day days week weeks today now instead see ' +
     'seen saw look looks show shows go goes come comes take takes give gives keep keeps put puts try tries start starts stop stops ' +
     'find finds think thinks know knows feel feels seem seems help helps work works run runs call calls set sets turn turns move ' +
-    'moves pick picks reach reaches drop drops adapt adapts rebuild rebuilt build builds built ship ships launch add adds change ' +
-    'changes improve better best good great big small large little first last next quick easy hard simple blank real actually ' +
+    'moves pick picks reach reaches drop drops adapt adapts rebuild rebuilt build builds built ship ships launch add adds ' +
+    'improve better best good great large little first last next quick easy hard simple blank real actually explains explain ' +
+    'covers cover write writes trace back beats beat ask asks handle handles tell tells ' +
     'every always never often less fewer lot lots step steps based without within across around while though because already yet ' +
     'again ever'
   ).split(' '),
@@ -38,9 +39,11 @@ export function keywords(text: string, n = 8): string[] {
   seq.forEach((w, i) => {
     if (!w) return;
     seen++;
-    score.set(w, (score.get(w) || 0) + 1 + (seen <= 6 ? 0.4 : 0));
+    // earlier words carry a little more weight: posts usually lead with the subject
+    const early = Math.max(0, 0.6 * (1 - seen / 12));
+    score.set(w, (score.get(w) || 0) + 1 + early);
     const next = seq[i + 1];
-    if (next) score.set(`${w} ${next}`, (score.get(`${w} ${next}`) || 0) + 1.5);
+    if (next) score.set(`${w} ${next}`, (score.get(`${w} ${next}`) || 0) + 1.5 + early);
   });
   const ranked = [...score.entries()].sort((a, b) => b[1] - a[1] || b[0].length - a[0].length);
   const out: string[] = [];

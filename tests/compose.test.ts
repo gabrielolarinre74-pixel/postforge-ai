@@ -61,3 +61,10 @@ describe('offline composer', () => {
     expect(v.find((x) => x.platform === 'linkedin')!.text.endsWith('— Team Acme')).toBe(true);
   });
 });
+
+describe('topic detection on the samples', () => {
+  it('picks the subject phrase, not a verb', async () => {
+    const { SAMPLE_BRIEFS } = await import('@/lib/samples');
+    expect(SAMPLE_BRIEFS.map((s) => topicOf(s.brief.idea))).toEqual(['onboarding flow', 'small changes', 'pricing page']);
+  });
+});
