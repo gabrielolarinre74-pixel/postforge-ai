@@ -9,7 +9,8 @@ const STOP = new Set(
     'find finds think thinks know knows feel feels seem seems help helps work works run runs call calls set sets turn turns move ' +
     'moves pick picks reach reaches drop drops adapt adapts rebuild rebuilt build builds built ship ships launch add adds ' +
     'improve better best good great large little first last next quick easy hard simple blank real actually explains explain ' +
-    'covers cover write writes trace back beats beat ask asks handle handles tell tells ' +
+    'covers cover write writes trace back beats beat ask asks handle handles tell tells above below under off ' +
+    'easier harder faster slower sooner later something anything everything ' +
     'every always never often less fewer lot lots step steps based without within across around while though because already yet ' +
     'again ever'
   ).split(' '),

@@ -123,7 +123,7 @@ function forX(brief: Brief, voice: Voice, i: number, all: string[], topic: strin
     do text = finish(`${h}\n\n${pts.slice(0, n).map((p) => `${bullet(brief, 0)} ${strip(p)}`).join('\n')}\n\n${c}`);
     while (lengthFor('x', text) > PLATFORMS.x.limit && --n > 1);
   } else if (i === 2) text = finish(`${h}\n\n${pts.join('\n\n')}\n\n${c}`);
-  else text = finish(`${h} ${pts[0] ?? ''} ${c}`.replace(/\s+/g, ' ').trim());
+  else text = finish(`${h} ${h.endsWith(':') ? lowerFirst(pts[0] ?? '') : pts[0] ?? ''} ${c}`.replace(/\s+/g, ' ').trim());
   let thread: string[] | undefined;
   if (lengthFor('x', text) > PLATFORMS.x.limit) {
     // thread the body; hashtags only ride along on the last post if they fit

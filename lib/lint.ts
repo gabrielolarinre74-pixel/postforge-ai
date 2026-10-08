@@ -32,7 +32,8 @@ export function readingEase(text: string): number {
 export function lintPost(platform: PlatformId, text: string, opts: { banned?: string[] } = {}): Check[] {
   const p = PLATFORMS[platform];
   const len = lengthFor(platform, text);
-  const firstLine = text.trim().split('\n')[0] ?? '';
+  // the hook is the first sentence of the first line
+  const firstLine = (text.trim().split('\n')[0] ?? '').match(/^.*?[.!?:](\s|$)|^.*$/)?.[0].trim() ?? '';
   const tags = hashtagsIn(text);
   const words = text.match(/\b[A-Za-z]{3,}\b/g) ?? [];
   const caps = words.filter((w) => w === w.toUpperCase()).length;
