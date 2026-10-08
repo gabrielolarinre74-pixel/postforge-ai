@@ -53,3 +53,23 @@ describe('keywords and hashtags', () => {
     expect(tags).toHaveLength(3);
   });
 });
+
+describe('thread line handling', () => {
+  it('keeps every line of a bullet list when splitting', () => {
+    const text = 'Here is the list:\n\n' + Array.from({ length: 8 }, (_, i) => `✨ Point number ${i + 1} explains one more part of the launch plan`).join('\n') + '\n\nThat is all.';
+    const posts = splitThread(text, 280, false);
+    const joined = posts.join('\n');
+    for (let i = 1; i <= 8; i++) expect(joined).toContain(`Point number ${i} `);
+    expect(posts.every((p) => xLength(p) <= 280)).toBe(true);
+    expect(posts[0]).toContain('\n');
+  });
+});
+
+describe('phrase-aware keywords', () => {
+  it('prefers real noun phrases and never joins words across stopwords', () => {
+    const k = keywords('We rebuilt our onboarding flow. Support tickets about setup dropped. The onboarding flow now adapts.', 3);
+    expect(k[0]).toBe('onboarding flow');
+    expect(k).toContain('support tickets');
+    expect(k.join(' ')).not.toMatch(/rebuilt|dropped/);
+  });
+});
